@@ -1,0 +1,46 @@
+name: Auto Convert Gitee Images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/content/posts/**/*.md'
+
+jobs:
+  convert-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Convert Gitee images to local
+        run: node scripts/convert-gitee-images.mjs
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/content/posts/ public/images/uploads/
+          if git diff --staged --quiet; then
+            echo "No images to convert"
+          else
+            git commit -m "chore: auto-convert Gitee images to local storage
+
+Co-Authored-By: Claude Opus 4 <noreply@anthropic.com>"
+            git push
+          fi
