@@ -1,30 +1,40 @@
 ---
 title: 自述
-description: 这是一份站长的自述报告，请查收。
-comments: false
+description: 让生如夏花之绚烂，死如秋叶之静美。
+comments: true
 ---
 
-## 关于 Gyoza
+> _"Let life be beautiful like summer flowers and death like autumn leaves."_  
+> — 泰戈尔《飞鸟集》
 
-Gyoza 是一个使用 Astro 和 React 开发的博客主题。Gyoza 借鉴了 [Shiro](https://github.com/innei/Shiro) 和一些网站的设计。
+## 关于我
 
-Gyoza 的核心理念是简洁，快速，可爱。
+你好，我是 Sherry。
 
-- 在 [Markdown 示例](/posts/markdown) 中展示了 Markdown 的渲染样式
-- 可以前往 [Gyoza 使用指南](/posts/guide) 了解 Gyoza 的使用方法
+世界以痛吻我，我却报之以歌。我在代码的世界里寻找诗意，在二进制的海洋中捕捉灵感的飞鸟。
 
-Gyoza 是开源的，如果你对这个项目感兴趣，欢迎前往 Gyoza 的 [Github 仓库](https://github.com/lxchapu/astro-gyoza) 来提 Issue 或者 PR。
+我喜欢泰戈尔的《飞鸟集》，那些短小精悍的诗句，如同夏日午后的微风，轻轻拂过心间。每一行代码，每一段文字，都是我与这个世界对话的方式。
 
-## 关于作者
+_"The world has kissed my soul with its pain, asking for its return in songs."_
 
-我是 lxchapu，是一名前端开发者，喜欢各种有趣的东西。欢迎访问我的个人网站 [www.lxchapu.com](https://www.lxchapu.com)，了解关于我更多的信息。
+## 这个空间
 
-## 致谢
+这里是我的数字花园，记录着技术探索的足迹，也珍藏着生活中的诗与远方。
 
-感谢以下项目：
+就像飞鸟掠过天空，留下的不是痕迹，而是歌声。我希望这里的每一篇文字，都能成为某个瞬间的回响。
 
-- [Astro](https://astro.build/)
-- [React](https://reactjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [Jotai](https://jotai.org/)
+_"Stray birds of summer come to my window to sing and fly away. And yellow leaves of autumn, which have no songs, flutter and fall there with a sign."_
+
+## 联系方式
+
+如果你想与我交流，欢迎通过以下方式找到我：
+
+- **GitHub**: [@SherryBX](https://github.com/SherryBX)
+- **Twitter**: [@Sherry_BX](https://twitter.com/Sherry_BX)
+- **Email**: [admin@sherry.top](mailto:admin@sherry.top)
+
+---
+
+_"Do not linger to gather flowers to keep them, but walk on, for flowers will keep themselves blooming all your way."_
+
+不要徘徊采花保存，只管向前走去，一路上花朵会不断开放。
