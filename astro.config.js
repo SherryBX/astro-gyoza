@@ -24,7 +24,7 @@ export default defineConfig({
   integrations: [
     tailwind(),
     react(),
-    // sitemap(), // 暂时禁用，avoid "Cannot read properties of undefined (reading 'reduce')" build error
+    // sitemap(), // 暂时禁用，手动生成 sitemap
     swup({
       theme: false,
       animationClass: 'swup-transition-',
