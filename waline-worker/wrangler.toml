@@ -1,0 +1,8 @@
+name = "waline"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "waline-db"
+database_id = "8f4fe8c2-9171-4a2c-b5a1-bfc97a12aea7"
