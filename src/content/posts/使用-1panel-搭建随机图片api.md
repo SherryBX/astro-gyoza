@@ -1,0 +1,97 @@
+---
+title: 使用 1panel 搭建随机图片api
+date: 2025-03-28
+lastMod: 2025-03-28
+summary: 使用 1panel 搭建随机图片api
+category: 技术
+tags:
+  - 部署
+comments: true
+draft: false
+---
+
+## 🍔安装运行环境
+
+随机图片API是基于PHP运行环境搭建的
+
+![](/images/uploads/使用-1panel-搭建随机图片api-202503281509723.png)
+
+这是我们采用**PHP8**
+
+![](/images/uploads/使用-1panel-搭建随机图片api-202503281509817.png)
+
+创建运行环境
+
+![](/images/uploads/使用-1panel-搭建随机图片api-202503281509797.png)
+
+之后进一步创建网站
+
+![](/images/uploads/使用-1panel-搭建随机图片api-202503281509894.png)
+
+## 🍟调用本地文件图片
+
+创建一个用于存放图片的文件夹，将**index.php**中放入下方代码。
+
+```php
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// 设置图片目录的绝对路径
+$image_dir = __DIR__ . '/images/';
+
+// 获取所有支持的图片文件（包括 WebP 格式）
+$images = array_merge(
+    glob($image_dir . "*.webp") ?: [], // 优先支持 WebP 格式
+    glob($image_dir . "*.jpg") ?: [],
+    glob($image_dir . "*.jpeg") ?: [],
+    glob($image_dir . "*.png") ?: [],
+    glob($image_dir . "*.gif") ?: [],
+    glob($image_dir . "*.PNG") ?: [],
+    glob($image_dir . "*.WEBP") ?: [] // 支持大写扩展名
+);
+
+// 确保有图片文件
+if(empty($images)) {
+    die('没有找到图片文件，目录：' . $image_dir);
+}
+
+// 随机选择一张图片
+$image_path = $images[array_rand($images)];
+
+// 检查文件是否存在
+if(!file_exists($image_path)) {
+    die('图片文件不存在：' . $image_path);
+}
+
+// 获取图片的MIME类型
+$finfo = finfo_open(FILEINFO_MIME_TYPE);
+$mime_type = finfo_file($finfo, $image_path);
+finfo_close($finfo);
+
+// 如果是 WebP 格式，确保设置正确的 MIME 类型
+if(strtolower(pathinfo($image_path, PATHINFO_EXTENSION)) === 'webp') {
+    $mime_type = 'image/webp';
+}
+
+// 设置缓存控制头
+header('Cache-Control: public, max-age=31536000'); // 缓存一年
+header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT');
+
+// 设置正确的Content-Type
+header('Content-Type: ' . $mime_type);
+
+// 直接输出图片内容
+readfile($image_path);
+?>
+```
+
+![](/images/uploads/使用-1panel-搭建随机图片api-202503281509912.png)
+
+别忘记在你的**安全组**中开启对应端口
+
+## 🍕验证效果
+
+输入”IP:端口“，随机图片生成🥰
+
+![](/images/uploads/使用-1panel-搭建随机图片api-202503281509742.png)
