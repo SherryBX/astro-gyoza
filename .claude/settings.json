@@ -9,7 +9,14 @@
       "WebFetch(domain:github.com)",
       "Bash(gh api *)",
       "Bash(gh search *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(start \"E:\\\\WebstormProject\\\\项目\\\\Astro4Sherry\\\\test-signature-length.html\")",
+      "Bash(ls -la \"E:\\\\笔记\\\\Blog\" | head -30)",
+      "Read(//e/笔记/Blog/**)",
+      "Bash(node import-articles.mjs)",
+      "Bash(Select-String \"cloudflare\")",
+      "Bash(Measure-Object -Line)",
+      "Bash(node import-articles-fixed.mjs)"
     ]
   }
 }
