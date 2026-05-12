@@ -67,7 +67,7 @@ export default {
     // GET /api/comment - list comments
     if (pathname === '/api/comment' && request.method === 'GET') {
       const { searchParams } = url
-      const path = searchParams.get('path')
+      let path = searchParams.get('path')
       const page = parseInt(searchParams.get('page') || '1')
       const pageSize = parseInt(searchParams.get('pageSize') || '10')
 
@@ -78,11 +78,14 @@ export default {
         })
       }
 
-      // Get root comments
+      // Normalize path: remove trailing slash for consistency
+      path = path.replace(/\/$/, '')
+
+      // Get root comments - match both with and without trailing slash
       const { results: comments } = await env.DB.prepare(
-        `SELECT * FROM wl_comment WHERE url = ? AND pid IS NULL AND status = 'approved' ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
+        `SELECT * FROM wl_comment WHERE (url = ? OR url = ?) AND pid IS NULL AND status = 'approved' ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
       )
-        .bind(path, pageSize, (page - 1) * pageSize)
+        .bind(path, path + '/', pageSize, (page - 1) * pageSize)
         .all()
 
       // Get replies for each root comment
@@ -98,11 +101,11 @@ export default {
         replies = replyResults
       }
 
-      // Get count
+      // Get count - match both with and without trailing slash
       const { results: countResult } = await env.DB.prepare(
-        `SELECT COUNT(*) as count FROM wl_comment WHERE url = ? AND status = 'approved'`,
+        `SELECT COUNT(*) as count FROM wl_comment WHERE (url = ? OR url = ?) AND status = 'approved'`,
       )
-        .bind(path)
+        .bind(path, path + '/')
         .all()
       const count = countResult[0]?.count || 0
 

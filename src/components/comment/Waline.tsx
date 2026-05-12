@@ -9,6 +9,7 @@ export function Waline({ serverURL }: { serverURL: string }) {
     const walineInst = init({
       el: ref.current,
       serverURL,
+      path: window.location.pathname,
       dark: "[data-theme='dark']",
       login: 'disable',
       imageUploader: false,
