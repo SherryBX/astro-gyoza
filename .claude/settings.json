@@ -57,7 +57,8 @@
       "mcp__chrome-devtools__take_snapshot",
       "mcp__chrome-devtools__list_network_requests",
       "WebFetch(domain:sherry77.me)",
-      "mcp__chrome-devtools__evaluate_script"
+      "mcp__chrome-devtools__evaluate_script",
+      "mcp__chrome-devtools__navigate_page"
     ]
   }
 }

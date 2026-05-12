@@ -810,7 +810,7 @@ import '@/styles/global.css'
             <div class="comment-meta" data-astro-cid-orxeznep>
               <span data-astro-cid-orxeznep><strong data-astro-cid-orxeznep>${comment.nick || '匿名'}</strong></span>
               ${comment.mail ? `<span data-astro-cid-orxeznep>${comment.mail}</span>` : ''}
-              <span data-astro-cid-orxeznep>${new Date(comment.insertedAt).toLocaleString('zh-CN')}</span>
+              <span data-astro-cid-orxeznep>${new Date(comment.insertedAt * 1000).toLocaleString('zh-CN')}</span>
             </div>
             <span class="comment-status status-${comment.status}" data-astro-cid-orxeznep>${getStatusText(comment.status)}</span>
           </div>
@@ -900,6 +900,11 @@ import '@/styles/global.css'
         div.textContent = text
         return div.innerHTML
       }
+
+      // Expose functions to global scope for inline event handlers
+      window.deleteComment = deleteComment
+      window.updateStatus = updateStatus
+      window.changePage = changePage
     </script>
   </body>
 </html>
