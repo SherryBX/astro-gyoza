@@ -10,7 +10,7 @@ export function Waline({ serverURL }: { serverURL: string }) {
       el: ref.current,
       serverURL,
       dark: "[data-theme='dark']",
-      login: 'force',
+      login: 'disable',
       imageUploader: false,
       search: false,
       locale: {
