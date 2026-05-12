@@ -180,13 +180,13 @@ export default {
         .all()
 
       // Rename 'like' to 'like_count' for Waline client compatibility
-      const comment = inserted[0]
-      if (comment) {
-        comment.like_count = comment.like
-        delete comment.like
+      const insertedComment = inserted[0]
+      if (insertedComment) {
+        insertedComment.like_count = insertedComment.like
+        delete insertedComment.like
       }
 
-      return new Response(JSON.stringify({ errno: 0, data: comment }), {
+      return new Response(JSON.stringify({ errno: 0, data: insertedComment }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
