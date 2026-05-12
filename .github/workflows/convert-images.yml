@@ -39,8 +39,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No images to convert"
           else
-            git commit -m "chore: auto-convert Gitee images to local storage
-
-Co-Authored-By: Claude Opus 4 <noreply@anthropic.com>"
+            git commit -m "chore: auto-convert Gitee images to local storage" \
+              -m "Co-Authored-By: Claude Opus 4 <noreply@anthropic.com>"
             git push
           fi
