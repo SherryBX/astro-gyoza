@@ -83,16 +83,10 @@ export default {
 
       // Get root comments - match both with and without trailing slash
       const { results: comments } = await env.DB.prepare(
-        `SELECT * FROM wl_comment WHERE (url = ? OR url = ?) AND pid IS NULL AND status = 'approved' ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
+        `SELECT id, user_id, comment, insertedAt, link, mail, nick, pid, rid, ip, status, \`like\` as like_count, ua, url, createdAt, updatedAt FROM wl_comment WHERE (url = ? OR url = ?) AND pid IS NULL AND status = 'approved' ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
       )
         .bind(path, path + '/', pageSize, (page - 1) * pageSize)
         .all()
-
-      // Rename 'like' to 'like_count' for Waline client compatibility
-      comments.forEach((c) => {
-        c.like_count = c.like
-        delete c.like
-      })
 
       // Get replies for each root comment
       const commentIds = comments.map((c) => c.id)
@@ -100,16 +94,11 @@ export default {
       if (commentIds.length > 0) {
         const placeholders = commentIds.map(() => '?').join(',')
         const { results: replyResults } = await env.DB.prepare(
-          `SELECT * FROM wl_comment WHERE pid IN (${placeholders}) AND status = 'approved' ORDER BY insertedAt ASC`,
+          `SELECT id, user_id, comment, insertedAt, link, mail, nick, pid, rid, ip, status, \`like\` as like_count, ua, url, createdAt, updatedAt FROM wl_comment WHERE pid IN (${placeholders}) AND status = 'approved' ORDER BY insertedAt ASC`,
         )
           .bind(...commentIds)
           .all()
         replies = replyResults
-        // Rename 'like' to 'like_count' for Waline client compatibility
-        replies.forEach((c) => {
-          c.like_count = c.like
-          delete c.like
-        })
       }
 
       // Get count - match both with and without trailing slash
@@ -175,18 +164,13 @@ export default {
 
       const insertedId = meta.last_row_id
 
-      const { results: inserted } = await env.DB.prepare(`SELECT * FROM wl_comment WHERE id = ?`)
+      const { results: inserted } = await env.DB.prepare(
+        `SELECT id, user_id, comment, insertedAt, link, mail, nick, pid, rid, ip, status, \`like\` as like_count, ua, url, createdAt, updatedAt FROM wl_comment WHERE id = ?`,
+      )
         .bind(insertedId)
         .all()
 
-      // Rename 'like' to 'like_count' for Waline client compatibility
-      const insertedComment = inserted[0]
-      if (insertedComment) {
-        insertedComment.like_count = insertedComment.like
-        delete insertedComment.like
-      }
-
-      return new Response(JSON.stringify({ errno: 0, data: insertedComment }), {
+      return new Response(JSON.stringify({ errno: 0, data: inserted[0] }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
@@ -276,16 +260,10 @@ export default {
       const pageSize = parseInt(searchParams.get('pageSize') || '20')
 
       const { results: comments } = await env.DB.prepare(
-        `SELECT * FROM wl_comment ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
+        `SELECT id, user_id, comment, insertedAt, link, mail, nick, pid, rid, ip, status, \`like\` as like_count, ua, url, createdAt, updatedAt FROM wl_comment ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
       )
         .bind(pageSize, (page - 1) * pageSize)
         .all()
-
-      // Rename 'like' to 'like_count' for Waline client compatibility
-      comments.forEach((c) => {
-        c.like_count = c.like
-        delete c.like
-      })
 
       const { results: countResult } = await env.DB.prepare(
         `SELECT COUNT(*) as count FROM wl_comment`,
