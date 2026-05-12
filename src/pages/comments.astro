@@ -18,37 +18,48 @@ import '@/styles/global.css'
       }
 
       :root {
-        --bg-primary: oklch(98% 0.005 280);
-        --bg-secondary: oklch(96% 0.008 280);
-        --bg-elevated: oklch(100% 0 0);
-        --text-primary: oklch(25% 0.01 280);
-        --text-secondary: oklch(50% 0.01 280);
-        --text-tertiary: oklch(65% 0.008 280);
-        --border: oklch(90% 0.005 280);
-        --accent: oklch(60% 0.18 25);
-        --accent-hover: oklch(55% 0.2 25);
-        --success: oklch(65% 0.15 145);
-        --warning: oklch(70% 0.15 85);
-        --danger: oklch(60% 0.18 25);
-        --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.05);
-        --shadow-md: 0 4px 12px oklch(0% 0 0 / 0.08);
-        --shadow-lg: 0 12px 32px oklch(0% 0 0 / 0.12);
+        --bg-primary: oklch(98.5% 0.003 280);
+        --bg-secondary: oklch(96.5% 0.005 280);
+        --bg-elevated: oklch(99.5% 0.002 280);
+        --text-primary: oklch(22% 0.015 280);
+        --text-secondary: oklch(48% 0.012 280);
+        --text-tertiary: oklch(62% 0.01 280);
+        --border: oklch(92% 0.004 280);
+        --accent: oklch(58% 0.16 260);
+        --accent-hover: oklch(52% 0.18 260);
+        --accent-soft: oklch(58% 0.16 260 / 0.12);
+        --success: oklch(62% 0.14 150);
+        --success-soft: oklch(62% 0.14 150 / 0.12);
+        --warning: oklch(68% 0.13 80);
+        --warning-soft: oklch(68% 0.13 80 / 0.12);
+        --danger: oklch(58% 0.16 25);
+        --danger-soft: oklch(58% 0.16 25 / 0.12);
+        --shadow-sm: 0 1px 3px oklch(0% 0 0 / 0.04), 0 1px 2px oklch(0% 0 0 / 0.02);
+        --shadow-md: 0 4px 16px oklch(0% 0 0 / 0.06), 0 2px 8px oklch(0% 0 0 / 0.04);
+        --shadow-lg: 0 12px 40px oklch(0% 0 0 / 0.08), 0 4px 16px oklch(0% 0 0 / 0.06);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
       }
 
       @media (prefers-color-scheme: dark) {
         :root {
-          --bg-primary: oklch(18% 0.01 280);
-          --bg-secondary: oklch(22% 0.012 280);
-          --bg-elevated: oklch(25% 0.015 280);
-          --text-primary: oklch(95% 0.005 280);
-          --text-secondary: oklch(75% 0.008 280);
-          --text-tertiary: oklch(60% 0.01 280);
-          --border: oklch(35% 0.01 280);
-          --accent: oklch(75% 0.15 85);
-          --accent-hover: oklch(80% 0.17 85);
-          --success: oklch(75% 0.12 145);
-          --warning: oklch(80% 0.12 85);
-          --danger: oklch(70% 0.15 25);
+          --bg-primary: oklch(17% 0.012 280);
+          --bg-secondary: oklch(20% 0.015 280);
+          --bg-elevated: oklch(23% 0.018 280);
+          --text-primary: oklch(96% 0.004 280);
+          --text-secondary: oklch(72% 0.008 280);
+          --text-tertiary: oklch(58% 0.01 280);
+          --border: oklch(32% 0.012 280);
+          --accent: oklch(72% 0.14 260);
+          --accent-hover: oklch(78% 0.16 260);
+          --accent-soft: oklch(72% 0.14 260 / 0.15);
+          --success: oklch(70% 0.12 150);
+          --success-soft: oklch(70% 0.12 150 / 0.15);
+          --warning: oklch(75% 0.11 80);
+          --warning-soft: oklch(75% 0.11 80 / 0.15);
+          --danger: oklch(68% 0.14 25);
+          --danger-soft: oklch(68% 0.14 25 / 0.15);
         }
       }
 
@@ -64,13 +75,13 @@ import '@/styles/global.css'
       .auth-overlay {
         position: fixed;
         inset: 0;
-        background: oklch(0% 0 0 / 0.6);
-        backdrop-filter: blur(8px);
+        background: oklch(0% 0 0 / 0.5);
+        backdrop-filter: blur(12px) saturate(1.2);
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 9999;
-        animation: fadeIn 0.2s ease-out;
+        animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       @keyframes fadeIn {
@@ -81,52 +92,56 @@ import '@/styles/global.css'
 
       .auth-box {
         background: var(--bg-elevated);
-        padding: 48px;
-        border-radius: 16px;
+        padding: 56px 48px;
+        border-radius: var(--radius-lg);
         box-shadow: var(--shadow-lg);
         width: 90%;
-        max-width: 420px;
+        max-width: 440px;
         border: 1px solid var(--border);
-        animation: slideUp 0.3s ease-out;
+        animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       @keyframes slideUp {
         from {
           opacity: 0;
-          transform: translateY(20px);
+          transform: translateY(24px) scale(0.96);
         }
       }
 
       .auth-box h2 {
-        font-size: 24px;
-        font-weight: 600;
-        margin-bottom: 8px;
+        font-size: 28px;
+        font-weight: 650;
+        margin-bottom: 10px;
         color: var(--text-primary);
+        letter-spacing: -0.02em;
       }
 
       .auth-box p {
         color: var(--text-secondary);
-        font-size: 14px;
-        margin-bottom: 32px;
+        font-size: 15px;
+        margin-bottom: 36px;
+        line-height: 1.5;
       }
 
       .auth-box input {
         width: 100%;
-        padding: 14px 16px;
+        padding: 16px 18px;
         border: 1.5px solid var(--border);
-        border-radius: 10px;
-        font-size: 15px;
+        border-radius: var(--radius-md);
+        font-size: 16px;
         background: var(--bg-secondary);
         color: var(--text-primary);
-        transition: all 0.15s ease-out;
-        margin-bottom: 16px;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        margin-bottom: 18px;
+        font-family: inherit;
       }
 
       .auth-box input:focus {
         outline: none;
         border-color: var(--accent);
         background: var(--bg-elevated);
-        box-shadow: 0 0 0 3px oklch(from var(--accent) l c h / 0.1);
+        box-shadow: 0 0 0 4px var(--accent-soft);
+        transform: translateY(-1px);
       }
 
       .auth-box input::placeholder {
@@ -135,30 +150,48 @@ import '@/styles/global.css'
 
       .auth-error {
         color: var(--danger);
-        font-size: 13px;
-        margin-top: -12px;
-        margin-bottom: 16px;
+        font-size: 14px;
+        margin-top: -14px;
+        margin-bottom: 18px;
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
+        padding: 12px 16px;
+        background: var(--danger-soft);
+        border-radius: var(--radius-sm);
+        animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-8px);
+        }
+        75% {
+          transform: translateX(8px);
+        }
       }
 
       .auth-box button {
         width: 100%;
-        padding: 14px;
+        padding: 16px;
         background: var(--accent);
-        color: oklch(98% 0 0);
+        color: oklch(99% 0 0);
         border: none;
-        border-radius: 10px;
-        font-size: 15px;
-        font-weight: 500;
+        border-radius: var(--radius-md);
+        font-size: 16px;
+        font-weight: 600;
         cursor: pointer;
-        transition: all 0.15s ease-out;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        font-family: inherit;
       }
 
       .auth-box button:hover {
         background: var(--accent-hover);
-        transform: translateY(-1px);
+        transform: translateY(-2px);
         box-shadow: var(--shadow-md);
       }
 
@@ -173,11 +206,12 @@ import '@/styles/global.css'
       .header {
         background: var(--bg-elevated);
         border-bottom: 1px solid var(--border);
-        padding: 24px 32px;
+        padding: 28px 40px;
         position: sticky;
         top: 0;
         z-index: 100;
-        backdrop-filter: blur(12px);
+        backdrop-filter: blur(16px) saturate(1.8);
+        box-shadow: var(--shadow-sm);
       }
 
       .header-content {
@@ -189,86 +223,130 @@ import '@/styles/global.css'
       }
 
       .header h1 {
-        font-size: 20px;
-        font-weight: 600;
+        font-size: 22px;
+        font-weight: 650;
         color: var(--text-primary);
+        letter-spacing: -0.02em;
       }
 
       .header-actions {
         display: flex;
-        gap: 12px;
+        gap: 10px;
       }
 
       .btn-secondary {
-        padding: 8px 16px;
+        padding: 10px 18px;
         background: var(--bg-secondary);
         color: var(--text-primary);
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: var(--radius-sm);
         font-size: 14px;
         font-weight: 500;
         cursor: pointer;
-        transition: all 0.15s ease-out;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        font-family: inherit;
       }
 
       .btn-secondary:hover {
         background: var(--bg-primary);
         border-color: var(--text-tertiary);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .btn-secondary:active {
+        transform: translateY(0);
       }
 
       .container {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 32px;
+        padding: 40px 40px 60px;
       }
 
       .stats {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 20px;
-        margin-bottom: 32px;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
       }
 
       .stat-card {
         background: var(--bg-elevated);
-        padding: 24px;
-        border-radius: 12px;
+        padding: 28px 32px;
+        border-radius: var(--radius-md);
         border: 1px solid var(--border);
-        transition: all 0.2s ease-out;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       .stat-card:hover {
-        transform: translateY(-2px);
+        transform: translateY(-4px);
         box-shadow: var(--shadow-md);
+        border-color: var(--accent);
+      }
+
+      .stat-card:hover::before {
+        transform: scaleX(1);
       }
 
       .stat-card h3 {
         font-size: 13px;
-        font-weight: 500;
+        font-weight: 600;
         color: var(--text-secondary);
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 12px;
+        letter-spacing: 0.8px;
+        margin-bottom: 16px;
       }
 
       .stat-card .number {
-        font-size: 36px;
+        font-size: 42px;
         font-weight: 700;
         color: var(--text-primary);
         font-variant-numeric: tabular-nums;
+        line-height: 1;
+        letter-spacing: -0.03em;
       }
 
       .comments-section {
         background: var(--bg-elevated);
-        border-radius: 12px;
+        border-radius: var(--radius-md);
         border: 1px solid var(--border);
         overflow: hidden;
+        box-shadow: var(--shadow-sm);
       }
 
       .comment {
-        padding: 24px;
+        padding: 28px 32px;
         border-bottom: 1px solid var(--border);
-        transition: background 0.15s ease-out;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+      }
+
+      .comment::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--accent);
+        transform: scaleY(0);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       .comment:last-child {
@@ -279,134 +357,167 @@ import '@/styles/global.css'
         background: var(--bg-secondary);
       }
 
+      .comment:hover::before {
+        transform: scaleY(1);
+      }
+
       .comment-header {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 12px;
-        gap: 16px;
+        margin-bottom: 14px;
+        gap: 20px;
       }
 
       .comment-meta {
         display: flex;
         flex-wrap: wrap;
-        gap: 16px;
+        gap: 18px;
         font-size: 14px;
         color: var(--text-secondary);
+        align-items: center;
       }
 
       .comment-meta strong {
         color: var(--text-primary);
         font-weight: 600;
+        font-size: 15px;
       }
 
       .comment-status {
-        padding: 4px 10px;
+        padding: 5px 12px;
         border-radius: 6px;
         font-size: 12px;
-        font-weight: 500;
+        font-weight: 600;
         white-space: nowrap;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
       }
 
       .status-approved {
-        background: oklch(from var(--success) l c h / 0.15);
+        background: var(--success-soft);
         color: var(--success);
       }
 
       .status-waiting {
-        background: oklch(from var(--warning) l c h / 0.15);
+        background: var(--warning-soft);
         color: var(--warning);
       }
 
       .status-spam {
-        background: oklch(from var(--danger) l c h / 0.15);
+        background: var(--danger-soft);
         color: var(--danger);
       }
 
       .comment-content {
         color: var(--text-primary);
         line-height: 1.7;
-        margin-bottom: 12px;
+        margin-bottom: 14px;
         word-wrap: break-word;
+        font-size: 15px;
       }
 
       .comment-url {
         font-size: 13px;
         color: var(--text-tertiary);
-        margin-bottom: 16px;
-        font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+        margin-bottom: 18px;
+        font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Consolas', monospace;
+        padding: 8px 12px;
+        background: var(--bg-secondary);
+        border-radius: var(--radius-sm);
+        display: inline-block;
       }
 
       .comment-actions {
         display: flex;
-        gap: 8px;
+        gap: 10px;
         flex-wrap: wrap;
       }
 
       .btn {
-        padding: 8px 14px;
+        padding: 9px 16px;
         border: none;
-        border-radius: 7px;
+        border-radius: var(--radius-sm);
         font-size: 13px;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
-        transition: all 0.15s ease-out;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        font-family: inherit;
+        letter-spacing: 0.2px;
       }
 
       .btn-approve {
-        background: oklch(from var(--success) l c h / 0.15);
+        background: var(--success-soft);
         color: var(--success);
       }
 
       .btn-approve:hover {
-        background: oklch(from var(--success) l c h / 0.25);
+        background: oklch(from var(--success) l c h / 0.2);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px oklch(from var(--success) l c h / 0.2);
       }
 
       .btn-spam {
-        background: oklch(from var(--warning) l c h / 0.15);
+        background: var(--warning-soft);
         color: var(--warning);
       }
 
       .btn-spam:hover {
-        background: oklch(from var(--warning) l c h / 0.25);
+        background: oklch(from var(--warning) l c h / 0.2);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px oklch(from var(--warning) l c h / 0.2);
       }
 
       .btn-delete {
-        background: oklch(from var(--danger) l c h / 0.15);
+        background: var(--danger-soft);
         color: var(--danger);
       }
 
       .btn-delete:hover {
-        background: oklch(from var(--danger) l c h / 0.25);
+        background: oklch(from var(--danger) l c h / 0.2);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px oklch(from var(--danger) l c h / 0.2);
+      }
+
+      .btn:active {
+        transform: translateY(0);
       }
 
       .pagination {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 12px;
-        padding: 32px 0;
+        gap: 14px;
+        padding: 40px 0;
       }
 
       .pagination button {
-        padding: 10px 18px;
-        border: 1px solid var(--border);
+        padding: 11px 20px;
+        border: 1.5px solid var(--border);
         background: var(--bg-elevated);
         color: var(--text-primary);
-        border-radius: 8px;
+        border-radius: var(--radius-sm);
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
-        transition: all 0.15s ease-out;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        font-family: inherit;
       }
 
       .pagination button:hover:not(:disabled) {
         border-color: var(--accent);
         color: var(--accent);
+        background: var(--accent-soft);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .pagination button:active:not(:disabled) {
+        transform: translateY(0);
       }
 
       .pagination button:disabled {
-        opacity: 0.4;
+        opacity: 0.35;
         cursor: not-allowed;
       }
 
@@ -414,25 +525,28 @@ import '@/styles/global.css'
         color: var(--text-secondary);
         font-size: 14px;
         font-variant-numeric: tabular-nums;
+        font-weight: 500;
+        padding: 0 8px;
       }
 
       .loading,
       .empty {
         text-align: center;
-        padding: 64px 32px;
+        padding: 80px 32px;
         color: var(--text-secondary);
+        font-size: 15px;
       }
 
       .loading::before {
         content: '';
         display: inline-block;
-        width: 24px;
-        height: 24px;
+        width: 32px;
+        height: 32px;
         border: 3px solid var(--border);
         border-top-color: var(--accent);
         border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-        margin-bottom: 16px;
+        animation: spin 0.7s linear infinite;
+        margin-bottom: 20px;
       }
 
       @keyframes spin {
@@ -441,34 +555,130 @@ import '@/styles/global.css'
         }
       }
 
+      .empty {
+        color: var(--text-tertiary);
+      }
+
       @media (max-width: 768px) {
         .container {
-          padding: 20px 16px;
+          padding: 24px 20px 48px;
         }
 
         .header {
-          padding: 20px 16px;
+          padding: 20px 20px;
+        }
+
+        .header h1 {
+          font-size: 19px;
+        }
+
+        .header-actions {
+          gap: 8px;
+        }
+
+        .btn-secondary {
+          padding: 8px 14px;
+          font-size: 13px;
         }
 
         .auth-box {
-          padding: 32px 24px;
+          padding: 40px 32px;
+          max-width: 90%;
+        }
+
+        .auth-box h2 {
+          font-size: 24px;
         }
 
         .stats {
           grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .stat-card {
+          padding: 24px 28px;
+        }
+
+        .stat-card .number {
+          font-size: 38px;
         }
 
         .comment {
-          padding: 20px 16px;
+          padding: 24px 20px;
         }
 
         .comment-header {
           flex-direction: column;
+          gap: 12px;
+          align-items: flex-start;
         }
 
         .comment-meta {
           flex-direction: column;
-          gap: 8px;
+          gap: 10px;
+          align-items: flex-start;
+        }
+
+        .comment-status {
+          align-self: flex-start;
+        }
+
+        .comment-content {
+          font-size: 14px;
+        }
+
+        .comment-url {
+          font-size: 12px;
+          word-break: break-all;
+        }
+
+        .comment-actions {
+          width: 100%;
+        }
+
+        .comment-actions .btn {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .pagination {
+          padding: 32px 0;
+          gap: 10px;
+        }
+
+        .pagination button {
+          padding: 10px 16px;
+          font-size: 13px;
+        }
+
+        .pagination span {
+          font-size: 13px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .auth-box {
+          padding: 32px 24px;
+        }
+
+        .auth-box h2 {
+          font-size: 22px;
+        }
+
+        .header h1 {
+          font-size: 18px;
+        }
+
+        .stat-card .number {
+          font-size: 34px;
+        }
+
+        .comment-actions {
+          flex-direction: column;
+        }
+
+        .comment-actions .btn {
+          width: 100%;
         }
       }
     </style>

@@ -1,33 +1,18 @@
-// Helper function to convert SQLite datetime to Unix timestamp (seconds)
-function convertDates(comment) {
-  if (comment.insertedAt) {
-    comment.insertedAt = Math.floor(new Date(comment.insertedAt).getTime() / 1000)
-  }
-  if (comment.createdAt) {
-    comment.createdAt = Math.floor(new Date(comment.createdAt).getTime() / 1000)
-  }
-  if (comment.updatedAt) {
-    comment.updatedAt = Math.floor(new Date(comment.updatedAt).getTime() / 1000)
-  }
-  return comment
-}
+var __defProp = Object.defineProperty
+var __name = (target, value) => __defProp(target, 'name', { value, configurable: true })
 
-export default {
+// src/index.js
+var index_default = {
   async fetch(request, env) {
     const url = new URL(request.url)
-
-    // CORS
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type,Authorization',
     }
-
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: corsHeaders })
     }
-
-    // Init DB tables on first request
     if (url.pathname === '/api/init') {
       await env.DB.exec(`
         CREATE TABLE IF NOT EXISTS wl_comment (
@@ -73,42 +58,27 @@ export default {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
-
-    // Forward to Waline's official Cloudflare Worker adapter
-    // We use the @waline/cloudflare adapter pattern
     const { pathname } = url
-
-    // GET /api/comment - list comments
     if (pathname === '/api/comment' && request.method === 'GET') {
       const { searchParams } = url
       let path = searchParams.get('path')
       const page = parseInt(searchParams.get('page') || '1')
       const pageSize = parseInt(searchParams.get('pageSize') || '10')
-
       if (!path) {
         return new Response(JSON.stringify({ errmsg: 'path is required' }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
       }
-
-      // Normalize path: remove trailing slash for consistency
       path = path.replace(/\/$/, '')
-
-      // Get root comments - match both with and without trailing slash
       const { results: comments } = await env.DB.prepare(
         `SELECT id, user_id, comment, insertedAt, link, mail, nick, pid, rid, ip, status, ua, url, createdAt, updatedAt FROM wl_comment WHERE (url = ? OR url = ?) AND pid IS NULL AND status = 'approved' ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
       )
         .bind(path, path + '/', pageSize, (page - 1) * pageSize)
         .all()
-
-      // Add like_count field and convert dates
       comments.forEach((c) => {
         c.like_count = 0
-        convertDates(c)
       })
-
-      // Get replies for each root comment
       const commentIds = comments.map((c) => c.id)
       let replies = []
       if (commentIds.length > 0) {
@@ -119,36 +89,27 @@ export default {
           .bind(...commentIds)
           .all()
         replies = replyResults
-        // Add like_count field and convert dates
         replies.forEach((c) => {
           c.like_count = 0
-          convertDates(c)
         })
       }
-
-      // Get count - match both with and without trailing slash
       const { results: countResult } = await env.DB.prepare(
         `SELECT COUNT(*) as count FROM wl_comment WHERE (url = ? OR url = ?) AND status = 'approved'`,
       )
         .bind(path, path + '/')
         .all()
       const count = countResult[0]?.count || 0
-
-      // Build tree
       const replyMap = {}
       for (const r of replies) {
         if (!replyMap[r.pid]) replyMap[r.pid] = []
         replyMap[r.pid].push(r)
       }
-
-      const buildTree = (comment) => {
+      const buildTree = /* @__PURE__ */ __name((comment) => {
         const c = { ...comment, children: replyMap[comment.id] || [] }
         c.children = c.children.map(buildTree)
         return c
-      }
-
+      }, 'buildTree')
       const tree = comments.map(buildTree)
-
       return new Response(
         JSON.stringify({ errno: 0, data: { page, pageSize, count, data: tree } }),
         {
@@ -156,21 +117,16 @@ export default {
         },
       )
     }
-
-    // POST /api/comment - add comment
     if (pathname === '/api/comment' && request.method === 'POST') {
       const body = await request.json()
       const { comment, link, mail, nick, pid, rid, url: commentUrl, ua } = body
-
       if (!comment || !commentUrl) {
         return new Response(JSON.stringify({ errmsg: 'comment and url are required' }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
       }
-
       const ip = request.headers.get('CF-Connecting-IP') || ''
-
       const { meta } = await env.DB.prepare(
         `INSERT INTO wl_comment (comment, link, mail, nick, pid, rid, url, ip, ua, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved')`,
       )
@@ -178,7 +134,7 @@ export default {
           comment,
           link || null,
           mail || null,
-          nick || '匿名',
+          nick || '\u533F\u540D',
           pid || null,
           rid || null,
           commentUrl,
@@ -186,60 +142,43 @@ export default {
           ua || null,
         )
         .run()
-
       const insertedId = meta.last_row_id
-
       const { results: inserted } = await env.DB.prepare(
-        `SELECT id, user_id, comment, insertedAt, link, mail, nick, pid, rid, ip, status, ua, url, createdAt, updatedAt FROM wl_comment WHERE id = ?`,
+        `SELECT id, user_id, comment, insertedAt, link, mail, nick, pid, rid, ip, status, \`like\` as like_count, ua, url, createdAt, updatedAt FROM wl_comment WHERE id = ?`,
       )
         .bind(insertedId)
         .all()
-
-      const insertedComment = inserted[0]
-      if (insertedComment) {
-        insertedComment.like_count = 0
-        convertDates(insertedComment)
-      }
-
-      return new Response(JSON.stringify({ errno: 0, data: insertedComment }), {
+      return new Response(JSON.stringify({ errno: 0, data: inserted[0] }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
-
-    // GET /api/count - get page view / comment count
     if (pathname === '/api/count' && request.method === 'GET') {
       const { searchParams } = url
       const urls = searchParams.get('urls')
       const type = searchParams.get('type') || 'comment'
-
       if (!urls) {
         return new Response(JSON.stringify({ errmsg: 'urls is required' }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
       }
-
       const urlList = urls.split(',').filter(Boolean)
       if (urlList.length === 0) {
         return new Response(JSON.stringify({ errno: 0, data: [] }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
       }
-
       const placeholders = urlList.map(() => '?').join(',')
-
       if (type === 'comment') {
-        const { results } = await env.DB.prepare(
+        const { results: results2 } = await env.DB.prepare(
           `SELECT url, COUNT(*) as count FROM wl_comment WHERE url IN (${placeholders}) AND status = 'approved' GROUP BY url`,
         )
           .bind(...urlList)
           .all()
-        return new Response(JSON.stringify({ errno: 0, data: results }), {
+        return new Response(JSON.stringify({ errno: 0, data: results2 }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
       }
-
-      // type === 'time' (page views)
       const { results } = await env.DB.prepare(
         `SELECT url, time FROM wl_counter WHERE url IN (${placeholders})`,
       )
@@ -249,75 +188,57 @@ export default {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
-
-    // POST /api/count - increment page view
     if (pathname === '/api/count' && request.method === 'POST') {
       const body = await request.json()
       const { url: countUrl } = body
-
       if (!countUrl) {
         return new Response(JSON.stringify({ errmsg: 'url is required' }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
       }
-
       await env.DB.prepare(
         `INSERT INTO wl_counter (url, time) VALUES (?, 1) ON CONFLICT(url) DO UPDATE SET time = time + 1, updatedAt = CURRENT_TIMESTAMP`,
       )
         .bind(countUrl)
         .run()
-
       const { results } = await env.DB.prepare(`SELECT url, time FROM wl_counter WHERE url = ?`)
         .bind(countUrl)
         .all()
-
       return new Response(JSON.stringify({ errno: 0, data: results[0] }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
-
-    // Admin UI
     if (pathname === '/ui' || pathname === '/ui/') {
       return new Response(getAdminHTML(), {
         headers: { ...corsHeaders, 'Content-Type': 'text/html; charset=utf-8' },
       })
     }
-
-    // Admin API - List all comments
     if (pathname === '/api/admin/comments' && request.method === 'GET') {
       const { searchParams } = url
       const page = parseInt(searchParams.get('page') || '1')
       const pageSize = parseInt(searchParams.get('pageSize') || '20')
-
       const { results: comments } = await env.DB.prepare(
         `SELECT id, user_id, comment, insertedAt, link, mail, nick, pid, rid, ip, status, ua, url, createdAt, updatedAt FROM wl_comment ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
       )
         .bind(pageSize, (page - 1) * pageSize)
         .all()
-
-      // Add like_count field and convert dates
       comments.forEach((c) => {
         c.like_count = 0
-        convertDates(c)
       })
-
       const { results: countResult } = await env.DB.prepare(
         `SELECT COUNT(*) as count FROM wl_comment`,
       ).all()
       const totalCount = countResult[0]?.count || 0
-
       const { results: statusCounts } = await env.DB.prepare(
         `SELECT status, COUNT(*) as count FROM wl_comment GROUP BY status`,
       ).all()
-
       const stats = {
         total: totalCount,
         approved: statusCounts.find((s) => s.status === 'approved')?.count || 0,
         waiting: statusCounts.find((s) => s.status === 'waiting')?.count || 0,
         spam: statusCounts.find((s) => s.status === 'spam')?.count || 0,
       }
-
       return new Response(
         JSON.stringify({ errno: 0, data: { comments, count: totalCount, page, pageSize, stats } }),
         {
@@ -325,8 +246,6 @@ export default {
         },
       )
     }
-
-    // Admin API - Delete comment
     if (pathname.startsWith('/api/admin/comment/') && request.method === 'DELETE') {
       const commentId = pathname.split('/').pop()
       await env.DB.prepare(`DELETE FROM wl_comment WHERE id = ?`).bind(commentId).run()
@@ -334,33 +253,27 @@ export default {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
-
-    // Admin API - Update comment status
     if (pathname.startsWith('/api/admin/comment/') && request.method === 'PATCH') {
       const commentId = pathname.split('/').pop()
       const body = await request.json()
       const { status } = body
-
       await env.DB.prepare(`UPDATE wl_comment SET status = ? WHERE id = ?`)
         .bind(status, commentId)
         .run()
-
       return new Response(JSON.stringify({ errno: 0, message: 'Comment updated' }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
-
     return new Response('Waline Comment Service', { headers: corsHeaders })
   },
 }
-
 function getAdminHTML() {
   return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Waline 管理后台</title>
+  <title>Waline \u7BA1\u7406\u540E\u53F0</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; }
@@ -393,25 +306,25 @@ function getAdminHTML() {
 </head>
 <body>
   <div class="header">
-    <h1>Waline 管理后台</h1>
+    <h1>Waline \u7BA1\u7406\u540E\u53F0</h1>
   </div>
   <div class="container">
     <div class="stats">
       <div class="stat-card">
-        <h3>总评论数</h3>
+        <h3>\u603B\u8BC4\u8BBA\u6570</h3>
         <div class="number" id="totalComments">-</div>
       </div>
       <div class="stat-card">
-        <h3>待审核</h3>
+        <h3>\u5F85\u5BA1\u6838</h3>
         <div class="number" id="pendingComments">-</div>
       </div>
       <div class="stat-card">
-        <h3>已通过</h3>
+        <h3>\u5DF2\u901A\u8FC7</h3>
         <div class="number" id="approvedComments">-</div>
       </div>
     </div>
     <div class="comments" id="commentsList">
-      <div class="loading">加载中...</div>
+      <div class="loading">\u52A0\u8F7D\u4E2D...</div>
     </div>
     <div class="pagination" id="pagination"></div>
   </div>
@@ -431,7 +344,7 @@ function getAdminHTML() {
           updateStats(data.data.comments);
         }
       } catch (error) {
-        document.getElementById('commentsList').innerHTML = '<div class="empty">加载失败</div>';
+        document.getElementById('commentsList').innerHTML = '<div class="empty">\u52A0\u8F7D\u5931\u8D25</div>';
       }
     }
 
@@ -439,7 +352,7 @@ function getAdminHTML() {
       const container = document.getElementById('commentsList');
 
       if (comments.length === 0) {
-        container.innerHTML = '<div class="empty">暂无评论</div>';
+        container.innerHTML = '<div class="empty">\u6682\u65E0\u8BC4\u8BBA</div>';
         return;
       }
 
@@ -447,20 +360,20 @@ function getAdminHTML() {
         <div class="comment" data-id="\${comment.id}">
           <div class="comment-header">
             <div class="comment-meta">
-              <span><strong>\${comment.nick || '匿名'}</strong></span>
+              <span><strong>\${comment.nick || '\u533F\u540D'}</strong></span>
               <span>\${comment.mail || ''}</span>
               <span>\${new Date(comment.insertedAt).toLocaleString('zh-CN')}</span>
-              <span>状态: \${getStatusText(comment.status)}</span>
+              <span>\u72B6\u6001: \${getStatusText(comment.status)}</span>
             </div>
           </div>
           <div class="comment-content">\${escapeHtml(comment.comment)}</div>
           <div style="font-size: 12px; color: #999; margin-bottom: 10px;">
-            文章: \${comment.url}
+            \u6587\u7AE0: \${comment.url}
           </div>
           <div class="comment-actions">
-            \${comment.status !== 'approved' ? \`<button class="btn btn-approve" onclick="updateStatus(\${comment.id}, 'approved')">通过</button>\` : ''}
-            \${comment.status !== 'spam' ? \`<button class="btn btn-spam" onclick="updateStatus(\${comment.id}, 'spam')">标记垃圾</button>\` : ''}
-            <button class="btn btn-delete" onclick="deleteComment(\${comment.id})">删除</button>
+            \${comment.status !== 'approved' ? \`<button class="btn btn-approve" onclick="updateStatus(\${comment.id}, 'approved')">\u901A\u8FC7</button>\` : ''}
+            \${comment.status !== 'spam' ? \`<button class="btn btn-spam" onclick="updateStatus(\${comment.id}, 'spam')">\u6807\u8BB0\u5783\u573E</button>\` : ''}
+            <button class="btn btn-delete" onclick="deleteComment(\${comment.id})">\u5220\u9664</button>
           </div>
         </div>
       \`).join('');
@@ -476,9 +389,9 @@ function getAdminHTML() {
       }
 
       container.innerHTML = \`
-        <button onclick="changePage(\${currentPage - 1})" \${currentPage === 1 ? 'disabled' : ''}>上一页</button>
-        <span>第 \${currentPage} / \${totalPages} 页</span>
-        <button onclick="changePage(\${currentPage + 1})" \${currentPage === totalPages ? 'disabled' : ''}>下一页</button>
+        <button onclick="changePage(\${currentPage - 1})" \${currentPage === 1 ? 'disabled' : ''}>\u4E0A\u4E00\u9875</button>
+        <span>\u7B2C \${currentPage} / \${totalPages} \u9875</span>
+        <button onclick="changePage(\${currentPage + 1})" \${currentPage === totalPages ? 'disabled' : ''}>\u4E0B\u4E00\u9875</button>
       \`;
     }
 
@@ -489,13 +402,13 @@ function getAdminHTML() {
     }
 
     async function deleteComment(id) {
-      if (!confirm('确定要删除这条评论吗？')) return;
+      if (!confirm('\u786E\u5B9A\u8981\u5220\u9664\u8FD9\u6761\u8BC4\u8BBA\u5417\uFF1F')) return;
 
       try {
         await fetch(\`/api/admin/comment/\${id}\`, { method: 'DELETE' });
         loadComments();
       } catch (error) {
-        alert('删除失败');
+        alert('\u5220\u9664\u5931\u8D25');
       }
     }
 
@@ -508,7 +421,7 @@ function getAdminHTML() {
         });
         loadComments();
       } catch (error) {
-        alert('更新失败');
+        alert('\u66F4\u65B0\u5931\u8D25');
       }
     }
 
@@ -518,7 +431,7 @@ function getAdminHTML() {
     }
 
     function getStatusText(status) {
-      const map = { approved: '已通过', waiting: '待审核', spam: '垃圾评论' };
+      const map = { approved: '\u5DF2\u901A\u8FC7', waiting: '\u5F85\u5BA1\u6838', spam: '\u5783\u573E\u8BC4\u8BBA' };
       return map[status] || status;
     }
 
@@ -529,7 +442,10 @@ function getAdminHTML() {
     }
 
     loadComments();
-  </script>
+  <\/script>
 </body>
 </html>`
 }
+__name(getAdminHTML, 'getAdminHTML')
+export { index_default as default }
+//# sourceMappingURL=index.js.map

@@ -34,7 +34,8 @@
       "Bash(find \"C:/Users/Sherry/.claude/skills/impeccable/\" -name \"*.mjs\" -o -name \"*.js\" 2>/dev/null | head -20)",
       "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=/posts/3391c36b\")",
       "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/admin/comments?page=1&pageSize=5\")",
-      "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=/posts/61aa2977/&page=1&pageSize=10\")"
+      "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=/posts/61aa2977/&page=1&pageSize=10\")",
+      "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/admin/comments?page=1&pageSize=20\")"
     ]
   }
 }
