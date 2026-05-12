@@ -212,7 +212,7 @@ import '@/styles/global.css'
           autocomplete="off"
         />
         <div id="authError" class="auth-error hidden">口令错误，请重试</div>
-        <button onclick="checkPassword()">登录</button>
+        <button id="loginButton">登录</button>
       </div>
     </div>
     <div id="mainContent" class="hidden">
@@ -267,6 +267,9 @@ import '@/styles/global.css'
           input.focus()
         }
       }
+
+      // 登录按钮点击事件
+      document.getElementById('loginButton').addEventListener('click', checkPassword)
 
       // 回车键提交
       document.getElementById('passwordInput').addEventListener('keypress', (e) => {
