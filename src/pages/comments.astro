@@ -577,7 +577,7 @@ import '@/styles/global.css'
           if (data.errno === 0) {
             renderComments(data.data.comments)
             renderPagination(data.data.count)
-            updateStats(data.data.comments)
+            updateStats(data.data)
           }
         } catch (error) {
           document.getElementById('commentsList').innerHTML = '<div class="empty">加载失败</div>'
@@ -633,14 +633,21 @@ import '@/styles/global.css'
       `
       }
 
-      function updateStats(comments) {
-        document.getElementById('totalComments').textContent = comments.length
-        document.getElementById('pendingComments').textContent = comments.filter(
-          (c) => c.status === 'waiting',
-        ).length
-        document.getElementById('approvedComments').textContent = comments.filter(
-          (c) => c.status === 'approved',
-        ).length
+      function updateStats(data) {
+        if (data.stats) {
+          document.getElementById('totalComments').textContent = data.stats.total
+          document.getElementById('pendingComments').textContent = data.stats.waiting
+          document.getElementById('approvedComments').textContent = data.stats.approved
+        } else {
+          // Fallback for old API response
+          document.getElementById('totalComments').textContent = data.count || 0
+          document.getElementById('pendingComments').textContent = data.comments.filter(
+            (c) => c.status === 'waiting',
+          ).length
+          document.getElementById('approvedComments').textContent = data.comments.filter(
+            (c) => c.status === 'approved',
+          ).length
+        }
       }
 
       async function deleteComment(id) {

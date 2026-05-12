@@ -16,7 +16,25 @@
       "Bash(node import-articles.mjs)",
       "Bash(Select-String \"cloudflare\")",
       "Bash(Measure-Object -Line)",
-      "Bash(node import-articles-fixed.mjs)"
+      "Bash(node import-articles-fixed.mjs)",
+      "Bash(xargs basename)",
+      "Bash(xargs ls -lh)",
+      "Bash(node fix-images.mjs)",
+      "Bash(wc -l /c/Users/Sherry/AppData/Local/Temp/claude/e--WebstormProject----Astro4Sherry/4a2e092f-d77d-4686-b8dc-86a3980df3b4/tasks/bdr9xc1t6.output)",
+      "Read(//c/Users/Sherry/AppData/Local/Temp/claude/e--WebstormProject----Astro4Sherry/4a2e092f-d77d-4686-b8dc-86a3980df3b4/tasks/**)",
+      "Bash(tail -20 /c/Users/Sherry/AppData/Local/Temp/claude/e--WebstormProject----Astro4Sherry/4a2e092f-d77d-4686-b8dc-86a3980df3b4/tasks/bdr9xc1t6.output)",
+      "Bash(node fix-single-article.mjs)",
+      "Bash(cd .. && ls -la src/pages/comments.astro)",
+      "Read(//e/WebstormProject/项目/**)",
+      "Bash(curl -s https://sherry77.me/impeccable)",
+      "Bash(node C:/Users/Sherry/.claude/skills/impeccable/scripts/load-context.mjs)",
+      "Bash(node C:/Users/Sherry/.claude/skills/impeccable/scripts/teach.mjs)",
+      "Bash(ls -la \"C:/Users/Sherry/.claude/skills/impeccable/\")",
+      "Read(//c/Users/Sherry/.cc-switch/skills/impeccable/**)",
+      "Bash(find \"C:/Users/Sherry/.claude/skills/impeccable/\" -name \"*.mjs\" -o -name \"*.js\" 2>/dev/null | head -20)",
+      "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=/posts/3391c36b\")",
+      "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/admin/comments?page=1&pageSize=5\")",
+      "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=/posts/61aa2977/&page=1&pageSize=10\")"
     ]
   }
 }
