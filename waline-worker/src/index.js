@@ -94,11 +94,15 @@ export default {
       if (commentIds.length > 0) {
         const placeholders = commentIds.map(() => '?').join(',')
         const { results: replyResults } = await env.DB.prepare(
-          `SELECT id, user_id, comment, insertedAt, link, mail, nick, pid, rid, ip, status, \`like\` as like_count, ua, url, createdAt, updatedAt FROM wl_comment WHERE pid IN (${placeholders}) AND status = 'approved' ORDER BY insertedAt ASC`,
+          `SELECT id, user_id, comment, insertedAt, link, mail, nick, pid, rid, ip, status, ua, url, createdAt, updatedAt FROM wl_comment WHERE pid IN (${placeholders}) AND status = 'approved' ORDER BY insertedAt ASC`,
         )
           .bind(...commentIds)
           .all()
         replies = replyResults
+        // Add like_count field
+        replies.forEach((c) => {
+          c.like_count = 0
+        })
       }
 
       // Get count - match both with and without trailing slash
@@ -260,10 +264,15 @@ export default {
       const pageSize = parseInt(searchParams.get('pageSize') || '20')
 
       const { results: comments } = await env.DB.prepare(
-        `SELECT id, user_id, comment, insertedAt, link, mail, nick, pid, rid, ip, status, \`like\` as like_count, ua, url, createdAt, updatedAt FROM wl_comment ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
+        `SELECT id, user_id, comment, insertedAt, link, mail, nick, pid, rid, ip, status, ua, url, createdAt, updatedAt FROM wl_comment ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
       )
         .bind(pageSize, (page - 1) * pageSize)
         .all()
+
+      // Add like_count field
+      comments.forEach((c) => {
+        c.like_count = 0
+      })
 
       const { results: countResult } = await env.DB.prepare(
         `SELECT COUNT(*) as count FROM wl_comment`,
