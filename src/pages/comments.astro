@@ -798,28 +798,28 @@ import '@/styles/global.css'
         const container = document.getElementById('commentsList')
 
         if (comments.length === 0) {
-          container.innerHTML = '<div class="empty">暂无评论</div>'
+          container.innerHTML = '<div class="empty" data-astro-cid-orxeznep>暂无评论</div>'
           return
         }
 
         container.innerHTML = comments
           .map(
             (comment) => `
-        <div class="comment" data-id="${comment.id}">
-          <div class="comment-header">
-            <div class="comment-meta">
-              <span><strong>${comment.nick || '匿名'}</strong></span>
-              ${comment.mail ? `<span>${comment.mail}</span>` : ''}
-              <span>${new Date(comment.insertedAt).toLocaleString('zh-CN')}</span>
+        <div class="comment" data-id="${comment.id}" data-astro-cid-orxeznep>
+          <div class="comment-header" data-astro-cid-orxeznep>
+            <div class="comment-meta" data-astro-cid-orxeznep>
+              <span data-astro-cid-orxeznep><strong data-astro-cid-orxeznep>${comment.nick || '匿名'}</strong></span>
+              ${comment.mail ? `<span data-astro-cid-orxeznep>${comment.mail}</span>` : ''}
+              <span data-astro-cid-orxeznep>${new Date(comment.insertedAt).toLocaleString('zh-CN')}</span>
             </div>
-            <span class="comment-status status-${comment.status}">${getStatusText(comment.status)}</span>
+            <span class="comment-status status-${comment.status}" data-astro-cid-orxeznep>${getStatusText(comment.status)}</span>
           </div>
-          <div class="comment-content">${escapeHtml(comment.comment)}</div>
-          <div class="comment-url">${comment.url}</div>
-          <div class="comment-actions">
-            ${comment.status !== 'approved' ? `<button class="btn btn-approve" onclick="updateStatus(${comment.id}, 'approved')">通过</button>` : ''}
-            ${comment.status !== 'spam' ? `<button class="btn btn-spam" onclick="updateStatus(${comment.id}, 'spam')">标记垃圾</button>` : ''}
-            <button class="btn btn-delete" onclick="deleteComment(${comment.id})">删除</button>
+          <div class="comment-content" data-astro-cid-orxeznep>${escapeHtml(comment.comment)}</div>
+          <div class="comment-url" data-astro-cid-orxeznep>${comment.url}</div>
+          <div class="comment-actions" data-astro-cid-orxeznep>
+            ${comment.status !== 'approved' ? `<button class="btn btn-approve" data-astro-cid-orxeznep onclick="updateStatus(${comment.id}, 'approved')">通过</button>` : ''}
+            ${comment.status !== 'spam' ? `<button class="btn btn-spam" data-astro-cid-orxeznep onclick="updateStatus(${comment.id}, 'spam')">标记垃圾</button>` : ''}
+            <button class="btn btn-delete" data-astro-cid-orxeznep onclick="deleteComment(${comment.id})">删除</button>
           </div>
         </div>
       `,
@@ -837,9 +837,9 @@ import '@/styles/global.css'
         }
 
         container.innerHTML = `
-        <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>上一页</button>
-        <span>第 ${currentPage} / ${totalPages} 页</span>
-        <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>下一页</button>
+        <button data-astro-cid-orxeznep onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>上一页</button>
+        <span data-astro-cid-orxeznep>第 ${currentPage} / ${totalPages} 页</span>
+        <button data-astro-cid-orxeznep onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>下一页</button>
       `
       }
 

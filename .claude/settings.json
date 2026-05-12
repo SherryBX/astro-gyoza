@@ -35,7 +35,29 @@
       "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=/posts/3391c36b\")",
       "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/admin/comments?page=1&pageSize=5\")",
       "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=/posts/61aa2977/&page=1&pageSize=10\")",
-      "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/admin/comments?page=1&pageSize=20\")"
+      "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/admin/comments?page=1&pageSize=20\")",
+      "Bash(pnpm dev *)",
+      "Bash(curl -s \"https://api.github.com/repos/SherryBX/astro-gyoza/actions/runs?per_page=1\")",
+      "Bash(curl -s \"https://astro4sherry.pages.dev/comments\")",
+      "WebFetch(domain:astro4sherry.pages.dev)",
+      "Bash(curl -s \"https://astro4sherry.pages.dev/comments\" -o /tmp/comments.html)",
+      "Read(//tmp/**)",
+      "Bash(curl -I \"https://astro4sherry.pages.dev/comments\")",
+      "Bash(curl -s \"https://astro4sherry.pages.dev/comments/\")",
+      "Bash(pnpm build *)",
+      "Bash(curl -s \"https://astro4sherry.pages.dev/_astro/comments.DWpN1ljI.css\")",
+      "Bash(curl -s \"https://astro4sherry.pages.dev/_astro/comments.BhRkGwFf.css\")",
+      "Bash(curl -s \"https://sherry77.me/_astro/comments.BhRkGwFf.css\")",
+      "Bash(curl -s \"https://sherry77.me/comments/\")",
+      "Bash(git ls-remote *)",
+      "Bash(curl -s \"https://sherry77.me/comments/\" -o /tmp/deployed.html)",
+      "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/admin/comments?page=1&pageSize=1\")",
+      "mcp__chrome-devtools__new_page",
+      "mcp__chrome-devtools__take_screenshot",
+      "mcp__chrome-devtools__take_snapshot",
+      "mcp__chrome-devtools__list_network_requests",
+      "WebFetch(domain:sherry77.me)",
+      "mcp__chrome-devtools__evaluate_script"
     ]
   }
 }
