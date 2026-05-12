@@ -68,7 +68,15 @@
       "Bash(python -c \"import sys, json; data=json.load\\(sys.stdin\\); ts=data['data']['data'][0]['insertedAt']; print\\(f'时间戳: {ts} \\({len\\(str\\(ts\\)\\)}位数字\\)'\\)\")",
       "mcp__chrome-devtools__select_page",
       "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=/posts/61aa2977/\")",
-      "Bash(python -c \"import sys, json; data=json.load\\(sys.stdin\\); print\\('insertedAt:', data['data']['data'][0]['insertedAt'], '\\(', len\\(str\\(data['data']['data'][0]['insertedAt']\\)\\), 'digits \\)'\\)\")"
+      "Bash(python -c \"import sys, json; data=json.load\\(sys.stdin\\); print\\('insertedAt:', data['data']['data'][0]['insertedAt'], '\\(', len\\(str\\(data['data']['data'][0]['insertedAt']\\)\\), 'digits \\)'\\)\")",
+      "Bash(python -c \"import sys, json; data=json.load\\(sys.stdin\\); print\\(json.dumps\\(data['data']['data'][0], indent=2, ensure_ascii=False\\)\\)\")",
+      "Bash(curl -s \"https://waline.js.org/api/comment?path=/&pageSize=1\")",
+      "Bash(python -c \"import sys, json; data=json.load\\(sys.stdin\\); print\\('Official API insertedAt:', data['data'][0]['insertedAt'] if data.get\\('data'\\) and len\\(data['data']\\) > 0 else 'N/A', '\\(', len\\(str\\(data['data'][0]['insertedAt']\\)\\) if data.get\\('data'\\) and len\\(data['data']\\) > 0 else 0, 'digits \\)'\\)\")",
+      "mcp__chrome-devtools__list_console_messages",
+      "mcp__chrome-devtools__get_network_request",
+      "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=%2Fposts%2F61aa2977%2F&pageSize=10&page=1&lang=zh-CN&sortBy=insertedAt_desc\")",
+      "Bash(python -m json.tool)",
+      "Bash(Start-Sleep -Seconds 3)"
     ]
   }
 }
