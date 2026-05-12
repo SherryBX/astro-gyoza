@@ -61,7 +61,9 @@
       "mcp__chrome-devtools__navigate_page",
       "mcp__chrome-devtools__handle_dialog",
       "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=/posts/61aa2977\")",
-      "Bash(python -c \"import sys, json; data=json.load\\(sys.stdin\\); print\\(json.dumps\\(data['data']['data'][0] if data['data']['data'] else {}, indent=2\\)\\)\")"
+      "Bash(python -c \"import sys, json; data=json.load\\(sys.stdin\\); print\\(json.dumps\\(data['data']['data'][0] if data['data']['data'] else {}, indent=2\\)\\)\")",
+      "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=/posts/61aa2977/&pageSize=10&page=1\")",
+      "Bash(python -c \"import sys, json; data=json.load\\(sys.stdin\\); print\\('insertedAt:', data['data']['data'][0]['insertedAt'] if data['data']['data'] else 'no comments'\\)\")"
     ]
   }
 }
