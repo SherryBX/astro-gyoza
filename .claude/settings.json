@@ -58,7 +58,10 @@
       "mcp__chrome-devtools__list_network_requests",
       "WebFetch(domain:sherry77.me)",
       "mcp__chrome-devtools__evaluate_script",
-      "mcp__chrome-devtools__navigate_page"
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__handle_dialog",
+      "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=/posts/61aa2977\")",
+      "Bash(python -c \"import sys, json; data=json.load\\(sys.stdin\\); print\\(json.dumps\\(data['data']['data'][0] if data['data']['data'] else {}, indent=2\\)\\)\")"
     ]
   }
 }
