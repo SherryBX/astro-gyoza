@@ -83,7 +83,7 @@ export default {
 
       // Get root comments - match both with and without trailing slash
       const { results: comments } = await env.DB.prepare(
-        `SELECT *, like as like_count FROM wl_comment WHERE (url = ? OR url = ?) AND pid IS NULL AND status = 'approved' ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
+        `SELECT *, "like" as like_count FROM wl_comment WHERE (url = ? OR url = ?) AND pid IS NULL AND status = 'approved' ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
       )
         .bind(path, path + '/', pageSize, (page - 1) * pageSize)
         .all()
@@ -94,7 +94,7 @@ export default {
       if (commentIds.length > 0) {
         const placeholders = commentIds.map(() => '?').join(',')
         const { results: replyResults } = await env.DB.prepare(
-          `SELECT *, like as like_count FROM wl_comment WHERE pid IN (${placeholders}) AND status = 'approved' ORDER BY insertedAt ASC`,
+          `SELECT *, "like" as like_count FROM wl_comment WHERE pid IN (${placeholders}) AND status = 'approved' ORDER BY insertedAt ASC`,
         )
           .bind(...commentIds)
           .all()
@@ -165,7 +165,7 @@ export default {
       const insertedId = meta.last_row_id
 
       const { results: inserted } = await env.DB.prepare(
-        `SELECT *, like as like_count FROM wl_comment WHERE id = ?`,
+        `SELECT *, "like" as like_count FROM wl_comment WHERE id = ?`,
       )
         .bind(insertedId)
         .all()
@@ -260,7 +260,7 @@ export default {
       const pageSize = parseInt(searchParams.get('pageSize') || '20')
 
       const { results: comments } = await env.DB.prepare(
-        `SELECT *, like as like_count FROM wl_comment ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
+        `SELECT *, "like" as like_count FROM wl_comment ORDER BY insertedAt DESC LIMIT ? OFFSET ?`,
       )
         .bind(pageSize, (page - 1) * pageSize)
         .all()
