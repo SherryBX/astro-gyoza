@@ -127,9 +127,9 @@ pnpm new-friend
 
 ### Decap CMS 可视化编辑
 
-访问 [sherry77.me/sherry](https://sherry77.me/sherry) 使用可视化编辑器。
+使用 Decap CMS 可视化编辑器进行内容管理。
 
-需要 GitHub OAuth 认证（通过 Cloudflare Worker 代理）。
+需要 GitHub OAuth 认证和授权访问。
 
 ## ⚙️ 配置
 

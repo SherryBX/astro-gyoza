@@ -2,6 +2,9 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url)
 
+    // Allowed GitHub users (whitelist)
+    const ALLOWED_USERS = ['SherryBX']
+
     // CORS headers
     const corsHeaders = {
       'Access-Control-Allow-Origin': 'https://sherry77.me',
@@ -44,6 +47,23 @@ export default {
         })
       }
 
+      // Verify user is in whitelist
+      const userResponse = await fetch('https://api.github.com/user', {
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+          Accept: 'application/json',
+        },
+      })
+
+      const user = await userResponse.json()
+
+      if (!ALLOWED_USERS.includes(user.login)) {
+        return new Response(JSON.stringify({ error: 'Unauthorized', message: 'Access denied' }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        })
+      }
+
       // Return success page with token
       const html = `
         <!DOCTYPE html>
@@ -53,18 +73,12 @@ export default {
           <title>认证成功</title>
           <script>
             (function() {
-              console.log('OAuth callback started');
-              console.log('Window opener exists:', !!window.opener);
-
               if (!window.opener) {
                 document.body.innerHTML = '<p>错误：无法找到父窗口</p>';
                 return;
               }
 
               function receiveMessage(e) {
-                console.log('Received message from parent');
-                console.log('Message origin:', e.origin);
-
                 // Send authorization result back to parent
                 const content = {
                   token: '${data.access_token}',
@@ -72,11 +86,9 @@ export default {
                 };
                 const message = 'authorization:github:success:' + JSON.stringify(content);
 
-                console.log('Sending authorization message:', message);
                 window.opener.postMessage(message, e.origin);
 
                 setTimeout(function() {
-                  console.log('Closing window');
                   window.close();
                 }, 2000);
               }
@@ -85,14 +97,12 @@ export default {
               window.addEventListener('message', receiveMessage, false);
 
               // Start handshake with parent
-              console.log('Sending authorizing:github handshake');
               window.opener.postMessage('authorizing:github', '*');
             })();
           </script>
         </head>
         <body>
           <p>认证成功！正在关闭窗口...</p>
-          <p style="font-size: 12px; color: #666;">请打开浏览器控制台查看调试信息</p>
         </body>
         </html>
       `
