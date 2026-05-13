@@ -76,7 +76,11 @@
       "mcp__chrome-devtools__get_network_request",
       "Bash(curl -s \"https://waline.sherry-account.workers.dev/api/comment?path=%2Fposts%2F61aa2977%2F&pageSize=10&page=1&lang=zh-CN&sortBy=insertedAt_desc\")",
       "Bash(python -m json.tool)",
-      "Bash(Start-Sleep -Seconds 3)"
+      "Bash(Start-Sleep -Seconds 3)",
+      "Bash(ConvertFrom-Json)",
+      "Bash(ConvertTo-Json -Depth 10)",
+      "Bash(npm list *)",
+      "Bash(npm uninstall *)"
     ]
   }
 }
