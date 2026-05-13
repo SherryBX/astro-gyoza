@@ -1,0 +1,108 @@
+import { useEffect, useRef } from 'react'
+import 'aplayer/dist/APlayer.min.css'
+
+interface Song {
+  name: string
+  artist: string
+  url: string
+  cover: string
+  lrc?: string
+}
+
+interface MusicPlayerProps {
+  apiUrl?: string
+  playlistId?: string
+  autoplay?: boolean
+}
+
+export function MusicPlayer({
+  apiUrl = 'https://qq-music-api.sherry-account.workers.dev',
+  playlistId,
+  autoplay = false,
+}: MusicPlayerProps) {
+  const playerRef = useRef<HTMLDivElement>(null)
+  const aplayerRef = useRef<APlayer | null>(null)
+
+  useEffect(() => {
+    if (!playerRef.current) return
+
+    const loadPlaylist = async () => {
+      try {
+        const APlayer = (await import('aplayer')).default
+        let songs: Song[] = []
+
+        if (playlistId) {
+          const res = await fetch(`${apiUrl}/api/playlist?id=${playlistId}`)
+          const data = await res.json()
+
+          if (data.result === 0 && data.data?.songlist) {
+            songs = await Promise.all(
+              data.data.songlist.slice(0, 20).map(async (song: any) => {
+                const urlRes = await fetch(`${apiUrl}/api/song/url?mid=${song.mid}&quality=128`)
+                const urlData = await urlRes.json()
+
+                return {
+                  name: song.name,
+                  artist: song.singer.map((s: any) => s.name).join(' / '),
+                  url: urlData.data?.url || '',
+                  cover: `${apiUrl}/api/song/cover?mid=${song.mid}`,
+                }
+              })
+            )
+          }
+        } else {
+          const searchRes = await fetch(`${apiUrl}/api/search?keyword=周杰伦`)
+          const searchData = await searchRes.json()
+
+          if (searchData.result === 0 && searchData.data?.list) {
+            songs = await Promise.all(
+              searchData.data.list.slice(0, 10).map(async (song: any) => {
+                const urlRes = await fetch(`${apiUrl}/api/song/url?mid=${song.mid}&quality=128`)
+                const urlData = await urlRes.json()
+
+                return {
+                  name: song.name,
+                  artist: song.singer.map((s: any) => s.name).join(' / '),
+                  url: urlData.data?.url || '',
+                  cover: `${apiUrl}/api/song/cover?mid=${song.mid}`,
+                }
+              })
+            )
+          }
+        }
+
+        songs = songs.filter(s => s.url)
+
+        if (songs.length > 0 && playerRef.current) {
+          aplayerRef.current = new APlayer({
+            container: playerRef.current,
+            fixed: true,
+            autoplay,
+            theme: '#F55555',
+            loop: 'all',
+            order: 'list',
+            preload: 'auto',
+            volume: 0.7,
+            mutex: true,
+            listFolded: false,
+            listMaxHeight: 90,
+            audio: songs,
+          })
+        }
+      } catch (error) {
+        console.error('Failed to load music playlist:', error)
+      }
+    }
+
+    loadPlaylist()
+
+    return () => {
+      if (aplayerRef.current) {
+        aplayerRef.current.destroy()
+        aplayerRef.current = null
+      }
+    }
+  }, [apiUrl, playlistId, autoplay])
+
+  return <div ref={playerRef} />
+}
