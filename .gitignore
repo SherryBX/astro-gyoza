@@ -29,6 +29,9 @@ pnpm-debug.log*
 *.swo
 *~
 
+# Claude Code settings
+.claude/
+
 # Cloudflare Workers
 .wrangler/
 wrangler.toml.local
