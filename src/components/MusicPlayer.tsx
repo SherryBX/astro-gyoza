@@ -91,7 +91,7 @@ export function MusicPlayer({
             volume: 0.7,
             mutex: true,
             listFolded: false,
-            listMaxHeight: 90,
+            listMaxHeight: 300,
             audio: songs,
           })
         }
