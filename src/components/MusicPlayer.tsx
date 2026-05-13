@@ -94,18 +94,6 @@ export function MusicPlayer({
             listMaxHeight: 300,
             audio: songs,
           })
-
-          // 用户首次交互后自动播放
-          const playOnInteraction = () => {
-            aplayerRef.current?.play()
-            document.removeEventListener('click', playOnInteraction)
-            document.removeEventListener('scroll', playOnInteraction)
-            document.removeEventListener('keydown', playOnInteraction)
-          }
-
-          document.addEventListener('click', playOnInteraction, { once: true })
-          document.addEventListener('scroll', playOnInteraction, { once: true })
-          document.addEventListener('keydown', playOnInteraction, { once: true })
         }
       } catch (error) {
         console.error('Failed to load music playlist:', error)
