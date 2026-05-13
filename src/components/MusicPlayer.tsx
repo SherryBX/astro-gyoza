@@ -83,7 +83,7 @@ export function MusicPlayer({
           aplayerRef.current = new APlayer({
             container: playerRef.current,
             fixed: true,
-            autoplay,
+            autoplay: true,
             theme: '#F55555',
             loop: 'all',
             order: 'list',
