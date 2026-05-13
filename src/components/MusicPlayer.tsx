@@ -39,7 +39,7 @@ export function MusicPlayer({
 
           if (data.code === 0 && data.data?.songlist) {
             songs = await Promise.all(
-              data.data.songlist.slice(0, 20).map(async (song: any) => {
+              data.data.songlist.slice(0, 50).map(async (song: any) => {
                 const urlRes = await fetch(`${apiUrl}/api/song/url?mid=${song.mid}&quality=128`)
                 const urlData = await urlRes.json()
 
@@ -47,7 +47,9 @@ export function MusicPlayer({
                   name: song.name,
                   artist: song.singer.map((s: any) => s.name).join(' / '),
                   url: urlData.data?.[song.mid] || '',
-                  cover: `${apiUrl}/api/song/cover?mid=${song.mid}`,
+                  cover: song.album?.pmid
+                    ? `https://y.gtimg.cn/music/photo_new/T002R300x300M000${song.album.pmid}.jpg`
+                    : 'https://y.gtimg.cn/music/photo_new/T002R300x300M000.jpg',
                 }
               })
             )
@@ -66,7 +68,9 @@ export function MusicPlayer({
                   name: song.name,
                   artist: song.singer.map((s: any) => s.name).join(' / '),
                   url: urlData.data?.[song.mid] || '',
-                  cover: `${apiUrl}/api/song/cover?mid=${song.mid}`,
+                  cover: song.album?.pmid
+                    ? `https://y.gtimg.cn/music/photo_new/T002R300x300M000${song.album.pmid}.jpg`
+                    : 'https://y.gtimg.cn/music/photo_new/T002R300x300M000.jpg',
                 }
               })
             )
