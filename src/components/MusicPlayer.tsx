@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+// @ts-ignore - aplayer has no type definitions
 import 'aplayer/dist/APlayer.min.css'
 
 interface Song {
@@ -21,13 +22,14 @@ export function MusicPlayer({
   autoplay = false,
 }: MusicPlayerProps) {
   const playerRef = useRef<HTMLDivElement>(null)
-  const aplayerRef = useRef<APlayer | null>(null)
+  const aplayerRef = useRef<any>(null)
 
   useEffect(() => {
     if (!playerRef.current) return
 
     const loadPlaylist = async () => {
       try {
+        // @ts-ignore - dynamic import
         const APlayer = (await import('aplayer')).default
         let songs: Song[] = []
 
@@ -35,7 +37,7 @@ export function MusicPlayer({
           const res = await fetch(`${apiUrl}/api/playlist?id=${playlistId}`)
           const data = await res.json()
 
-          if (data.result === 0 && data.data?.songlist) {
+          if (data.code === 0 && data.data?.songlist) {
             songs = await Promise.all(
               data.data.songlist.slice(0, 20).map(async (song: any) => {
                 const urlRes = await fetch(`${apiUrl}/api/song/url?mid=${song.mid}&quality=128`)
@@ -44,7 +46,7 @@ export function MusicPlayer({
                 return {
                   name: song.name,
                   artist: song.singer.map((s: any) => s.name).join(' / '),
-                  url: urlData.data?.url || '',
+                  url: urlData.data?.[song.mid] || '',
                   cover: `${apiUrl}/api/song/cover?mid=${song.mid}`,
                 }
               })
@@ -54,7 +56,7 @@ export function MusicPlayer({
           const searchRes = await fetch(`${apiUrl}/api/search?keyword=周杰伦`)
           const searchData = await searchRes.json()
 
-          if (searchData.result === 0 && searchData.data?.list) {
+          if (searchData.code === 0 && searchData.data?.list) {
             songs = await Promise.all(
               searchData.data.list.slice(0, 10).map(async (song: any) => {
                 const urlRes = await fetch(`${apiUrl}/api/song/url?mid=${song.mid}&quality=128`)
@@ -63,7 +65,7 @@ export function MusicPlayer({
                 return {
                   name: song.name,
                   artist: song.singer.map((s: any) => s.name).join(' / '),
-                  url: urlData.data?.url || '',
+                  url: urlData.data?.[song.mid] || '',
                   cover: `${apiUrl}/api/song/cover?mid=${song.mid}`,
                 }
               })
