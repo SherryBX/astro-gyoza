@@ -54,7 +54,6 @@ export default {
           <script>
             (function() {
               console.log('OAuth callback started');
-              console.log('Access token:', '${data.access_token}');
               console.log('Window opener exists:', !!window.opener);
 
               if (!window.opener) {
@@ -63,7 +62,7 @@ export default {
               }
 
               function receiveMessage(e) {
-                console.log('Received message from parent:', e);
+                console.log('Received message from parent');
                 console.log('Message origin:', e.origin);
 
                 // Send authorization result back to parent
