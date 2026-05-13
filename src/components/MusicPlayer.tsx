@@ -94,6 +94,20 @@ export function MusicPlayer({
             listMaxHeight: 300,
             audio: songs,
           })
+
+          // 强制显示并启用列表滚动
+          setTimeout(() => {
+            const list = document.querySelector('.aplayer-list') as HTMLElement
+            if (list) {
+              list.style.display = 'block'
+              list.style.maxHeight = '300px'
+              list.style.overflowY = 'auto'
+            }
+            const player = document.querySelector('.aplayer')
+            if (player) {
+              player.classList.remove('aplayer-list-hide')
+            }
+          }, 100)
         }
       } catch (error) {
         console.error('Failed to load music playlist:', error)
@@ -110,5 +124,16 @@ export function MusicPlayer({
     }
   }, [apiUrl, playlistId, autoplay])
 
-  return <div ref={playerRef} />
+  return (
+    <>
+      <style>{`
+        .aplayer-fixed .aplayer-list {
+          display: block !important;
+          max-height: 300px !important;
+          overflow-y: auto !important;
+        }
+      `}</style>
+      <div ref={playerRef} />
+    </>
+  )
 }
