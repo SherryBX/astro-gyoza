@@ -1,5 +1,6 @@
 {
   "name": "astro-gyoza",
+  "description": "Sherry's personal blog built with Astro, React, and Cloudflare - featuring QQ Music integration, Decap CMS, and full-text search",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
