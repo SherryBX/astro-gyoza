@@ -151,7 +151,7 @@ pnpm new-friend
 - 专辑封面显示
 - 列表滚动浏览
 
-API 部署在 Cloudflare Workers：`qq-music-api.sherry-account.workers.dev`
+API 通过 Cloudflare Workers 部署
 
 ## 🚢 部署
 
