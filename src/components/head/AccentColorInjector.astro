@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import chroma from 'chroma-js'
   import { color as themeColor } from '@/config.json'
 
@@ -7,7 +7,7 @@
     return themeColor.accent[seed]
   }
 
-  function getRgbVal(color: chroma.Color) {
+  function getRgbVal(color) {
     return color.rgb().join(' ')
   }
 
